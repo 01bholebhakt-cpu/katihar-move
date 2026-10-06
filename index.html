@@ -841,13 +841,98 @@ setInterval(() => {
 },5000);
 
 
+let gpsWatcher = null;
+let userMarker = null;
+let tracking = false;
+
 function startRun(){
 
-  alert(
-    "🚀 KATIHAR MOVE\n\n" +
-    "Next step: GPS permission + live tracking.\n\n" +
-    "Walk • Jog • Run"
+  if(!navigator.geolocation){
+    alert("Your browser does not support GPS.");
+    return;
+  }
+
+  if(tracking){
+    stopRun();
+    return;
+  }
+
+  tracking = true;
+
+  navigator.geolocation.watchPosition(
+    position => {
+
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+      const accuracy = Math.round(position.coords.accuracy);
+
+      console.log("LIVE GPS:", {
+        latitude: lat,
+        longitude: lng,
+        accuracy: accuracy
+      });
+
+      updateMyLocation(lat, lng, accuracy);
+
+    },
+
+    error => {
+
+      console.error(error);
+
+      alert(
+        "GPS permission nahi mili.\n\n" +
+        "Browser location permission Allow karo."
+      );
+
+      tracking = false;
+
+    },
+
+    {
+      enableHighAccuracy: true,
+      maximumAge: 2000,
+      timeout: 10000
+    }
   );
+
+  document.querySelector(".primary").textContent =
+    "⏹ STOP RUN";
+
+}
+
+
+function updateMyLocation(lat,lng,accuracy){
+
+  /*
+    Abhi map visual demo hai.
+    Next step mein yahin actual MapLibre/Leaflet
+    map marker ko GPS coordinates se move karenge.
+  */
+
+  console.log(
+    `📍 ${lat}, ${lng} | ±${accuracy}m`
+  );
+
+}
+
+
+function stopRun(){
+
+  if(gpsWatcher !== null){
+
+    navigator.geolocation.clearWatch(gpsWatcher);
+
+    gpsWatcher = null;
+
+  }
+
+  tracking = false;
+
+  document.querySelector(".primary").textContent =
+    "START MOVING →";
+
+  console.log("GPS tracking stopped.");
 
 }
 
