@@ -3,40 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KTRX — The City Is Your Battlefield</title>
 
-<title>KATIHAR MOVE — Move. Compete. Own Your City.</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link
-  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-  rel="stylesheet"
->
-
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-/>
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <style>
-
 :root{
-  --bg:#07090c;
-  --panel:#0d1116;
-  --panel2:#11161c;
-  --border:#202832;
-  --border2:#29323d;
-  --text:#f5f7fa;
-  --muted:#78828e;
-  --muted2:#56606c;
-  --lime:#a3ff12;
-  --lime2:#76d900;
-  --cyan:#27d9ff;
-  --yellow:#ffd84d;
-  --red:#ff4d5e;
-  --green:#47f58a;
-  --shadow:0 20px 70px rgba(0,0,0,.35);
+  --bg:#05070a;
+  --panel:#0b0f14;
+  --panel2:#11161d;
+  --line:rgba(255,255,255,.09);
+  --text:#f4f7fa;
+  --muted:#7b8793;
+  --lime:#d7ff38;
+  --red:#ff3e48;
+  --blue:#42aaff;
+  --gold:#ffc94d;
+  --cyan:#45ffe0;
 }
 
 *{
@@ -45,3426 +29,1286 @@
   padding:0;
 }
 
-html{
-  scroll-behavior:smooth;
+html,body{
+  width:100%;
+  min-height:100%;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,Arial,Helvetica,sans-serif;
 }
 
 body{
-  font-family:Inter,Arial,sans-serif;
-  background:
-    radial-gradient(circle at 80% -10%,rgba(163,255,18,.07),transparent 28%),
-    radial-gradient(circle at 10% 30%,rgba(39,217,255,.04),transparent 25%),
-    var(--bg);
-  color:var(--text);
-  min-height:100vh;
   overflow-x:hidden;
 }
 
 button{
-  font-family:inherit;
+  font:inherit;
+  cursor:pointer;
 }
 
-button,
-a{
-  -webkit-tap-highlight-color:transparent;
+.hidden{
+  display:none!important;
 }
 
-.app{
+/* =========================
+   HOME
+========================= */
+
+#home{
   min-height:100vh;
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 75% 30%,rgba(215,255,56,.08),transparent 30%),
+    radial-gradient(circle at 15% 80%,rgba(66,170,255,.07),transparent 35%),
+    #05070a;
 }
 
-/* =========================================================
-   NAV
-========================================================= */
+.grid{
+  position:absolute;
+  inset:0;
+  opacity:.15;
+  background-image:
+    linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size:50px 50px;
+  mask-image:linear-gradient(to bottom,black,transparent);
+}
 
-.nav{
-  height:74px;
-  position:sticky;
-  top:0;
-  z-index:1000;
-
+.home-nav{
+  height:78px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-
-  padding:0 5%;
-
-  background:rgba(7,9,12,.86);
-  backdrop-filter:blur(22px);
-  -webkit-backdrop-filter:blur(22px);
-
-  border-bottom:1px solid rgba(255,255,255,.06);
+  padding:0 5vw;
+  border-bottom:1px solid var(--line);
+  position:relative;
+  z-index:3;
 }
 
-.brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  text-decoration:none;
-  color:white;
+.logo{
+  font-size:25px;
+  font-weight:1000;
+  letter-spacing:5px;
 }
 
-.brand-mark{
-  width:36px;
-  height:36px;
-  border-radius:11px;
-
-  display:grid;
-  place-items:center;
-
-  background:var(--lime);
-  color:#071000;
-
-  font-size:18px;
-  font-weight:900;
-
-  box-shadow:
-    0 0 0 5px rgba(163,255,18,.08),
-    0 8px 30px rgba(163,255,18,.15);
-}
-
-.brand-text{
-  font-size:20px;
-  font-weight:900;
-  letter-spacing:-1px;
-}
-
-.brand-text span{
+.logo span,
+.hud-logo span{
   color:var(--lime);
 }
 
-.nav-center{
+.status{
   display:flex;
+  align-items:center;
   gap:8px;
-  align-items:center;
-}
-
-.nav-link{
-  color:#8b95a1;
-  text-decoration:none;
-  font-size:12px;
-  font-weight:700;
-  padding:9px 12px;
-  border-radius:9px;
-  transition:.2s;
-}
-
-.nav-link:hover{
-  color:white;
-  background:#12171d;
-}
-
-.nav-actions{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.live-status{
-  display:flex;
-  align-items:center;
-  gap:7px;
-
-  border:1px solid rgba(163,255,18,.18);
-  background:rgba(163,255,18,.05);
-
-  color:#baff66;
-
-  padding:8px 12px;
-  border-radius:999px;
-
+  color:#8c97a2;
   font-size:10px;
-  font-weight:900;
-  letter-spacing:.5px;
+  letter-spacing:1.5px;
 }
 
-.live-dot{
-  width:6px;
-  height:6px;
+.dot{
+  width:7px;
+  height:7px;
   border-radius:50%;
-  background:var(--lime);
-  box-shadow:0 0 12px var(--lime);
-  animation:blink 1.5s infinite;
+  background:#54ff7b;
+  box-shadow:0 0 14px #54ff7b;
 }
-
-.avatar{
-  width:38px;
-  height:38px;
-  border-radius:50%;
-
-  display:grid;
-  place-items:center;
-
-  background:
-    linear-gradient(135deg,var(--lime),var(--cyan));
-
-  color:#061000;
-  font-size:13px;
-  font-weight:900;
-}
-
-/* =========================================================
-   HERO
-========================================================= */
 
 .hero{
-  max-width:1500px;
-  margin:auto;
-
-  padding:74px 5% 42px;
-
+  min-height:calc(100vh - 78px);
   display:grid;
-  grid-template-columns:.83fr 1.17fr;
-  gap:46px;
+  grid-template-columns:1fr 1fr;
+  align-items:center;
+  gap:55px;
+  padding:7vh 8vw;
+  position:relative;
+  z-index:2;
 }
 
 .eyebrow{
-  display:flex;
-  align-items:center;
-  gap:9px;
-
   color:var(--lime);
-
   font-size:10px;
   font-weight:900;
-
-  letter-spacing:2.3px;
-  text-transform:uppercase;
-
+  letter-spacing:3px;
   margin-bottom:20px;
 }
 
-.eyebrow:before{
-  content:"";
-  width:28px;
-  height:1px;
-  background:var(--lime);
-}
-
 .hero h1{
-  font-size:clamp(54px,7vw,94px);
-  line-height:.86;
-  letter-spacing:-6px;
-  font-weight:900;
-
-  margin-bottom:28px;
+  font-size:clamp(80px,12vw,165px);
+  line-height:.78;
+  letter-spacing:-9px;
+  font-weight:1000;
 }
 
-.hero h1 .green{
-  color:var(--lime);
+.hero h1 span{
+  color:transparent;
+  -webkit-text-stroke:1px rgba(255,255,255,.65);
 }
 
-.hero-description{
-  max-width:560px;
-
-  color:#8e98a4;
-
-  font-size:16px;
-  line-height:1.75;
-}
-
-.hero-description strong{
-  color:#dce1e6;
+.tagline{
+  max-width:480px;
+  margin-top:30px;
+  color:#a5afb9;
+  line-height:1.7;
+  font-size:14px;
 }
 
 .hero-actions{
   display:flex;
-  align-items:center;
-  gap:11px;
-
-  margin-top:30px;
+  gap:10px;
+  margin-top:32px;
 }
 
 .btn{
-  border:none;
-  border-radius:12px;
-
-  padding:14px 19px;
-
-  font-size:12px;
+  border:1px solid var(--line);
+  background:#10151b;
+  color:#fff;
+  padding:15px 22px;
+  border-radius:4px;
+  font-size:10px;
   font-weight:900;
-
-  cursor:pointer;
-
-  transition:
-    transform .2s,
-    box-shadow .2s,
-    background .2s;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  transition:.2s;
 }
 
 .btn:hover{
   transform:translateY(-2px);
+  border-color:#68737e;
 }
 
-.btn-primary{
-  color:#071000;
+.btn.primary{
+  color:#05070a;
   background:var(--lime);
-
-  box-shadow:
-    0 10px 30px rgba(163,255,18,.12);
+  border-color:var(--lime);
+  box-shadow:0 0 35px rgba(215,255,56,.15);
 }
 
-.btn-primary:hover{
-  box-shadow:
-    0 14px 40px rgba(163,255,18,.22);
-}
-
-.btn-secondary{
-  color:#dce1e7;
-  background:#12171d;
-  border:1px solid var(--border2);
-}
-
-.btn-secondary:hover{
-  background:#171d24;
-}
-
-.hero-note{
-  display:flex;
-  align-items:center;
-  gap:8px;
-
-  color:#606b77;
-  font-size:10px;
-  margin-top:17px;
-}
-
-.hero-note span{
-  color:var(--green);
-}
-
-/* =========================================================
-   HERO STATS
-========================================================= */
-
-.stats{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:9px;
-
-  margin-top:39px;
-}
-
-.stat{
-  padding:16px;
-
-  background:
-    linear-gradient(145deg,#10151b,#0b0f14);
-
-  border:1px solid var(--border);
-
-  border-radius:15px;
-}
-
-.stat-value{
-  font-size:23px;
-  font-weight:900;
-  letter-spacing:-1px;
-}
-
-.stat-label{
-  color:#68727e;
-
-  font-size:9px;
-  font-weight:700;
-
-  text-transform:uppercase;
-  letter-spacing:1px;
-
-  margin-top:5px;
-}
-
-/* =========================================================
-   MAP
-========================================================= */
-
-.map-shell{
+.hero-card{
+  height:500px;
   position:relative;
-}
-
-.map-card{
-  position:relative;
-
-  height:560px;
-
   overflow:hidden;
-
-  border-radius:25px;
-
-  border:1px solid var(--border2);
-
-  background:#111820;
-
-  box-shadow:var(--shadow);
+  border:1px solid var(--line);
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01)),
+    rgba(8,11,15,.9);
 }
 
-#map{
-  width:100%;
-  height:100%;
-
-  background:#121820;
-}
-
-/* Leaflet dark appearance */
-
-.leaflet-container{
-  background:#111820;
-  font-family:Inter,Arial,sans-serif;
-}
-
-.leaflet-control-zoom{
-  border:none!important;
-  box-shadow:none!important;
-}
-
-.leaflet-control-zoom a{
-  background:#0c1117!important;
-  color:#dce2e7!important;
-  border-color:#29313a!important;
-}
-
-.leaflet-control-attribution{
-  background:rgba(5,8,11,.8)!important;
-  color:#69737d!important;
-  font-size:8px!important;
-}
-
-.leaflet-control-attribution a{
-  color:#87939e!important;
-}
-
-/* MAP TOP */
-
-.map-top{
+.hero-card:before{
+  content:"";
   position:absolute;
-  z-index:500;
+  inset:0;
+  background:
+    linear-gradient(90deg,transparent 49.8%,rgba(255,255,255,.04) 50%,transparent 50.2%),
+    linear-gradient(transparent 49.8%,rgba(255,255,255,.04) 50%,transparent 50.2%);
+  background-size:70px 70px;
+}
 
-  top:16px;
-  left:16px;
-  right:16px;
+.radar{
+  position:absolute;
+  width:350px;
+  height:350px;
+  border:1px solid rgba(215,255,56,.18);
+  border-radius:50%;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+}
 
+.radar:before,
+.radar:after{
+  content:"";
+  position:absolute;
+  border:1px solid rgba(215,255,56,.1);
+  border-radius:50%;
+}
+
+.radar:before{
+  inset:50px;
+}
+
+.radar:after{
+  inset:105px;
+}
+
+.scan{
+  position:absolute;
+  width:175px;
+  height:1px;
+  left:50%;
+  top:50%;
+  background:linear-gradient(90deg,var(--lime),transparent);
+  transform-origin:left;
+  animation:scan 3s linear infinite;
+}
+
+@keyframes scan{
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+.fake-player{
+  position:absolute;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--lime);
+  box-shadow:0 0 15px var(--lime);
+}
+
+.fp1{left:25%;top:32%}
+.fp2{left:68%;top:27%;background:var(--red);box-shadow:0 0 15px var(--red)}
+.fp3{left:73%;top:65%;background:var(--blue);box-shadow:0 0 15px var(--blue)}
+.fp4{left:36%;top:72%;background:var(--gold);box-shadow:0 0 15px var(--gold)}
+
+.card-label{
+  position:absolute;
+  top:24px;
+  left:24px;
+  color:#75808b;
+  font-size:9px;
+  letter-spacing:2px;
+}
+
+.card-bottom{
+  position:absolute;
+  bottom:24px;
+  left:24px;
+  right:24px;
   display:flex;
   justify-content:space-between;
-  align-items:flex-start;
-
-  pointer-events:none;
+  align-items:end;
 }
 
-.map-chip{
+.card-bottom small{
+  display:block;
+  color:#6e7984;
+  font-size:8px;
+  letter-spacing:1.5px;
+}
+
+.card-bottom strong{
+  font-size:32px;
+  display:block;
+  margin-top:4px;
+}
+
+/* =========================
+   LOBBY
+========================= */
+
+#lobby{
+  min-height:100vh;
+  background:#070a0e;
+}
+
+.topbar{
+  height:70px;
+  padding:0 25px;
   display:flex;
   align-items:center;
-  gap:8px;
-
-  padding:9px 12px;
-
-  background:rgba(7,10,13,.92);
-
-  border:1px solid rgba(255,255,255,.1);
-
-  border-radius:10px;
-
-  box-shadow:0 10px 30px rgba(0,0,0,.25);
-
-  font-size:9px;
-  font-weight:900;
-  letter-spacing:.5px;
+  justify-content:space-between;
+  border-bottom:1px solid var(--line);
 }
 
-.map-chip.green{
-  color:#b9ff6a;
+.back{
+  color:#87929d;
+  font-size:10px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  cursor:pointer;
 }
 
-.map-chip .dot{
-  width:6px;
-  height:6px;
-  border-radius:50%;
-  background:var(--lime);
-  box-shadow:0 0 10px var(--lime);
+.lobby-content{
+  max-width:1200px;
+  margin:auto;
+  padding:55px 25px;
 }
 
-/* MAP BOTTOM */
-
-.map-bottom{
-  position:absolute;
-  z-index:500;
-
-  bottom:16px;
-  left:16px;
-  right:16px;
-
+.lobby-title{
   display:flex;
   justify-content:space-between;
-  align-items:flex-end;
-
-  pointer-events:none;
+  align-items:end;
+  margin-bottom:30px;
 }
 
-.map-info{
-  padding:12px 14px;
-
-  background:rgba(7,10,13,.93);
-
-  border:1px solid rgba(255,255,255,.09);
-
-  border-radius:12px;
-
-  box-shadow:0 15px 35px rgba(0,0,0,.3);
+.lobby-title h2{
+  font-size:50px;
+  letter-spacing:-2px;
 }
 
-.map-info-title{
-  font-size:11px;
-  font-weight:900;
+.match-code{
+  color:var(--lime);
+  font-size:10px;
+  letter-spacing:2px;
 }
 
-.map-info-sub{
-  margin-top:4px;
-
-  color:#68737e;
-
-  font-size:9px;
-}
-
-.gps-state{
-  padding:9px 12px;
-
-  background:#0a0f0c;
-
-  border:1px solid rgba(71,245,138,.2);
-
-  border-radius:10px;
-
-  color:#83f6a9;
-
-  font-size:9px;
-  font-weight:900;
-}
-
-/* =========================================================
-   CUSTOM MAP MARKERS
-========================================================= */
-
-.player-marker{
-  width:35px;
-  height:35px;
-
-  border-radius:50%;
-
+.lobby-grid{
   display:grid;
-  place-items:center;
-
-  color:#071000;
-
-  font-size:11px;
-  font-weight:900;
-
-  border:3px solid rgba(255,255,255,.85);
-
-  box-shadow:
-    0 0 0 5px rgba(163,255,18,.15),
-    0 6px 18px rgba(0,0,0,.5);
-}
-
-.player-marker.lime{
-  background:var(--lime);
-}
-
-.player-marker.cyan{
-  background:var(--cyan);
-
-  box-shadow:
-    0 0 0 5px rgba(39,217,255,.12),
-    0 6px 18px rgba(0,0,0,.5);
-}
-
-.player-marker.yellow{
-  background:var(--yellow);
-
-  box-shadow:
-    0 0 0 5px rgba(255,216,77,.12),
-    0 6px 18px rgba(0,0,0,.5);
-}
-
-.player-marker.red{
-  background:#ff6976;
-
-  box-shadow:
-    0 0 0 5px rgba(255,77,94,.12),
-    0 6px 18px rgba(0,0,0,.5);
-}
-
-.you-marker{
-  position:relative;
-
-  width:45px;
-  height:45px;
-
-  border-radius:50%;
-
-  display:grid;
-  place-items:center;
-
-  background:var(--lime);
-
-  color:#061000;
-
-  border:4px solid white;
-
-  font-size:12px;
-  font-weight:900;
-
-  box-shadow:
-    0 0 0 8px rgba(163,255,18,.16),
-    0 0 35px rgba(163,255,18,.5);
-}
-
-.you-marker:after{
-  content:"";
-
-  position:absolute;
-
-  width:62px;
-  height:62px;
-
-  border-radius:50%;
-
-  border:1px solid rgba(163,255,18,.5);
-
-  animation:locationPulse 1.8s infinite;
-}
-
-/* =========================================================
-   CONTENT GRID
-========================================================= */
-
-.content{
-  max-width:1500px;
-  margin:auto;
-
-  padding:20px 5% 85px;
-
-  display:grid;
-
-  grid-template-columns:1.2fr .8fr;
-
+  grid-template-columns:1.5fr .8fr;
   gap:18px;
 }
 
-.card{
-  background:
-    linear-gradient(145deg,rgba(18,23,29,.98),rgba(10,14,19,.98));
-
-  border:1px solid var(--border);
-
-  border-radius:20px;
-
-  padding:22px;
-
-  box-shadow:0 10px 45px rgba(0,0,0,.14);
+.panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:6px;
 }
 
-.card-header{
+.panel-head{
+  padding:17px 19px;
   display:flex;
   justify-content:space-between;
-  align-items:center;
-
-  margin-bottom:19px;
+  border-bottom:1px solid var(--line);
 }
 
-.card-title{
-  font-size:14px;
-  font-weight:900;
-  letter-spacing:-.3px;
-}
-
-.card-kicker{
-  color:#59636e;
-
+.panel-head span{
+  color:#77828d;
   font-size:9px;
-  font-weight:800;
-
-  text-transform:uppercase;
-  letter-spacing:1px;
+  letter-spacing:2px;
 }
 
-/* =========================================================
-   LIVE COMPETITION
-========================================================= */
+.players{
+  padding:14px;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:9px;
+}
 
-.competition{
+.player-slot{
+  min-height:82px;
+  padding:11px;
+  background:#10151b;
+  border:1px solid rgba(255,255,255,.06);
+}
+
+.avatar{
+  width:27px;
+  height:27px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#202832;
+  color:#b9c2ca;
+  font-size:9px;
+  font-weight:900;
+  margin-bottom:8px;
+}
+
+.player-slot strong{
+  display:block;
+  font-size:9px;
+}
+
+.player-slot small{
+  display:block;
+  margin-top:5px;
+  color:#65717c;
+  font-size:8px;
+}
+
+.rules{
+  padding:20px;
+}
+
+.rule{
+  display:flex;
+  gap:13px;
+  padding:15px 0;
+  border-bottom:1px solid var(--line);
+}
+
+.rule:last-child{
+  border-bottom:0;
+}
+
+.rule-icon{
+  min-width:30px;
+  height:30px;
+  border:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--lime);
+  font-size:8px;
+  font-weight:900;
+}
+
+.rule strong{
+  font-size:11px;
+}
+
+.rule p{
+  color:#68737e;
+  font-size:9px;
+  line-height:1.5;
+  margin-top:4px;
+}
+
+/* =========================
+   MATCH
+========================= */
+
+#match{
+  height:100vh;
   position:relative;
   overflow:hidden;
-
-  background:
-    radial-gradient(
-      circle at 88% 0%,
-      rgba(163,255,18,.14),
-      transparent 35%
-    ),
-    linear-gradient(145deg,#12191d,#0b1015);
+  background:#050709;
 }
 
-.competition:after{
-  content:"";
-
+#map{
   position:absolute;
+  inset:0;
+  z-index:1;
+  filter:saturate(.65) brightness(.72) contrast(1.05);
+}
 
-  right:-80px;
-  bottom:-120px;
+.leaflet-control-attribution{
+  display:none!important;
+}
 
-  width:300px;
-  height:300px;
-
-  border-radius:50%;
-
-  border:1px solid rgba(163,255,18,.07);
-  box-shadow:
-    0 0 0 45px rgba(163,255,18,.02),
-    0 0 0 90px rgba(163,255,18,.015);
-
+.hud{
+  position:absolute;
+  inset:0;
+  z-index:500;
   pointer-events:none;
 }
 
-.comp-live{
+.hud>*{
+  pointer-events:auto;
+}
+
+.match-top{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:78px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 22px;
+  background:linear-gradient(180deg,rgba(3,5,7,.97),rgba(3,5,7,.2),transparent);
+}
+
+.hud-logo{
+  font-size:19px;
+  font-weight:1000;
+  letter-spacing:3px;
+}
+
+.live{
+  margin-top:5px;
   display:flex;
   align-items:center;
   gap:7px;
-
-  color:#ff6875;
-
-  font-size:9px;
-  font-weight:900;
-
-  letter-spacing:1px;
+  color:#ff6262;
+  font-size:8px;
+  letter-spacing:2px;
 }
 
-.comp-live:before{
-  content:"";
-
+.live i{
   width:6px;
   height:6px;
-
   border-radius:50%;
-
-  background:#ff4d5e;
-
-  box-shadow:0 0 10px #ff4d5e;
-
-  animation:blink 1s infinite;
+  background:var(--red);
+  box-shadow:0 0 12px var(--red);
 }
 
-.comp-time{
-  color:#66717c;
-  font-size:9px;
-  font-weight:700;
-}
-
-.comp-name{
-  font-size:28px;
-  font-weight:900;
-  letter-spacing:-1.2px;
-
-  margin-top:17px;
-}
-
-.comp-sub{
-  color:#78828d;
-
-  font-size:11px;
-
-  margin-top:7px;
-}
-
-.comp-details{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-
-  margin-top:19px;
-}
-
-.detail-pill{
-  padding:7px 9px;
-
-  border-radius:8px;
-
-  background:#0b1015;
-  border:1px solid #252e37;
-
-  color:#8b95a0;
-
-  font-size:9px;
-  font-weight:800;
-}
-
-.detail-pill strong{
-  color:#e3e7ea;
-}
-
-.progress-wrap{
-  margin-top:22px;
-}
-
-.progress-top{
-  display:flex;
-  justify-content:space-between;
-
-  color:#626c77;
-
-  font-size:9px;
-  font-weight:700;
-
-  margin-bottom:7px;
-}
-
-.progress{
-  height:7px;
-
-  overflow:hidden;
-
-  background:#242b32;
-
-  border-radius:999px;
-}
-
-.progress-bar{
-  width:73%;
-  height:100%;
-
-  background:
-    linear-gradient(
-      90deg,
-      var(--lime2),
-      var(--lime)
-    );
-
-  border-radius:999px;
-
-  box-shadow:0 0 16px rgba(163,255,18,.25);
-}
-
-.comp-bottom{
+.match-info{
   display:flex;
   align-items:center;
-  justify-content:space-between;
-
-  margin-top:21px;
+  gap:25px;
 }
 
-.join-btn{
-  padding:12px 18px;
+.info-block{
+  text-align:right;
 }
 
-/* =========================================================
-   LEADERBOARD
-========================================================= */
-
-.leader-row{
-  display:grid;
-
-  grid-template-columns:31px 1fr auto;
-
-  align-items:center;
-
-  gap:9px;
-
-  padding:12px 0;
-
-  border-bottom:1px solid #1d242c;
-}
-
-.leader-row:last-child{
-  border-bottom:none;
-}
-
-.rank{
-  color:#59636e;
-
-  font-size:10px;
-  font-weight:900;
-}
-
-.rank.first{
-  color:var(--lime);
-}
-
-.person{
-  display:flex;
-  align-items:center;
-  gap:9px;
-}
-
-.person-avatar{
-  width:32px;
-  height:32px;
-
-  display:grid;
-  place-items:center;
-
-  border-radius:50%;
-
-  background:#202832;
-
-  color:#dfe4e8;
-
-  font-size:10px;
-  font-weight:900;
-}
-
-.person-name{
-  color:#e9edf0;
-
-  font-size:10px;
-  font-weight:800;
-}
-
-.person-mode{
-  color:#5f6974;
-
-  font-size:8px;
-
-  margin-top:3px;
-}
-
-.score{
-  color:var(--lime);
-
-  font-size:10px;
-  font-weight:900;
-}
-
-/* =========================================================
-   DASHBOARD
-========================================================= */
-
-.dashboard{
-  grid-column:1 / -1;
-
-  display:grid;
-
-  grid-template-columns:repeat(4,1fr);
-
-  gap:10px;
-}
-
-.metric{
-  padding:18px;
-
-  background:#0c1116;
-
-  border:1px solid var(--border);
-
-  border-radius:16px;
-
-  position:relative;
-  overflow:hidden;
-}
-
-.metric:after{
-  content:"";
-
-  position:absolute;
-
-  width:80px;
-  height:80px;
-
-  right:-40px;
-  top:-40px;
-
-  border-radius:50%;
-
-  background:rgba(163,255,18,.04);
-}
-
-.metric-icon{
-  color:var(--lime);
-
-  font-size:14px;
-
-  margin-bottom:14px;
-}
-
-.metric-value{
-  font-size:25px;
-  font-weight:900;
-  letter-spacing:-1px;
-}
-
-.metric-label{
-  color:#69737e;
-
-  font-size:9px;
-  font-weight:700;
-
+.info-block small{
+  display:block;
+  color:#717c87;
+  font-size:7px;
+  letter-spacing:1.4px;
   text-transform:uppercase;
+}
 
+.info-block strong{
+  font-size:16px;
+}
+
+.timer{
+  color:var(--lime);
+  font-variant-numeric:tabular-nums;
+}
+
+.left-hud{
+  position:absolute;
+  top:95px;
+  left:18px;
+  width:245px;
+}
+
+.status-card{
+  margin-bottom:9px;
+  padding:15px;
+  background:rgba(6,9,12,.87);
+  backdrop-filter:blur(13px);
+  border:1px solid var(--line);
+}
+
+.status-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+
+.status-row:last-child{
+  margin-bottom:0;
+}
+
+.status-row span{
+  color:#77828d;
+  font-size:8px;
   letter-spacing:1px;
+  text-transform:uppercase;
+}
 
+.status-row strong{
+  font-size:10px;
+}
+
+.bar{
+  height:4px;
+  background:#1a2128;
   margin-top:5px;
 }
 
-/* =========================================================
-   CHECKPOINTS
-========================================================= */
-
-.checkpoints{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:9px;
-}
-
-.checkpoint{
-  padding:14px;
-
-  background:#0a0f14;
-
-  border:1px solid #202832;
-
-  border-radius:13px;
-
-  transition:.2s;
-}
-
-.checkpoint:hover{
-  transform:translateY(-2px);
-  border-color:#33404c;
-}
-
-.checkpoint-number{
-  width:27px;
-  height:27px;
-
-  display:grid;
-  place-items:center;
-
-  border-radius:8px;
-
-  background:#1b232b;
-
-  color:#a8b2bc;
-
-  font-size:9px;
-  font-weight:900;
-
-  margin-bottom:12px;
-}
-
-.checkpoint.active{
-  border-color:rgba(163,255,18,.3);
-  background:
-    linear-gradient(
-      145deg,
-      rgba(163,255,18,.07),
-      #0a0f14
-    );
-}
-
-.checkpoint.active .checkpoint-number{
+.bar div{
+  height:100%;
+  width:82%;
   background:var(--lime);
-  color:#061000;
+  box-shadow:0 0 10px rgba(215,255,56,.4);
 }
 
-.checkpoint-name{
-  color:#e4e8eb;
-
-  font-size:10px;
-  font-weight:800;
+.event{
+  position:absolute;
+  top:103px;
+  left:50%;
+  transform:translateX(-50%);
+  min-width:330px;
+  padding:13px 18px;
+  text-align:center;
+  background:rgba(7,10,13,.95);
+  border:1px solid rgba(215,255,56,.25);
+  box-shadow:0 15px 60px rgba(0,0,0,.35);
 }
 
-.checkpoint-distance{
-  color:#5f6974;
+.event small{
+  color:var(--lime);
+  font-size:7px;
+  letter-spacing:2px;
+}
 
-  font-size:8px;
+.event strong{
+  display:block;
+  font-size:13px;
+  margin-top:5px;
+}
 
+.event p{
+  color:#77828d;
+  font-size:9px;
   margin-top:4px;
 }
 
-/* =========================================================
-   ACTIVITY FEED
-========================================================= */
+.right-hud{
+  position:absolute;
+  top:95px;
+  right:18px;
+  width:230px;
+}
 
-.feed{
-  grid-column:1 / -1;
+.killfeed{
+  background:rgba(6,9,12,.86);
+  backdrop-filter:blur(13px);
+  border:1px solid var(--line);
+}
+
+.feed-head{
+  padding:12px 14px;
+  color:#74808b;
+  font-size:8px;
+  letter-spacing:2px;
+  border-bottom:1px solid var(--line);
 }
 
 .feed-item{
-  display:flex;
-  gap:12px;
-
-  padding:13px 0;
-
-  border-bottom:1px solid #1d242c;
-}
-
-.feed-item:last-child{
-  border-bottom:none;
-}
-
-.feed-icon{
-  width:30px;
-  height:30px;
-
-  display:grid;
-  place-items:center;
-
-  border-radius:9px;
-
-  background:#151d24;
-
-  color:var(--lime);
-
-  font-size:11px;
-}
-
-.feed-copy{
-  flex:1;
-}
-
-.feed-text{
-  color:#aeb6be;
-
-  font-size:10px;
-  line-height:1.5;
-}
-
-.feed-text strong{
-  color:#f0f3f5;
-}
-
-.feed-time{
-  color:#59636e;
-
-  font-size:8px;
-
-  margin-top:4px;
-}
-
-/* =========================================================
-   FOOTER
-========================================================= */
-
-.footer{
-  border-top:1px solid #171e26;
-
-  padding:27px 5%;
-
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-
-  color:#4e5863;
-
+  padding:10px 14px;
+  border-bottom:1px solid rgba(255,255,255,.04);
+  color:#aab3bc;
   font-size:9px;
 }
 
-.footer-brand{
-  color:#79838e;
-  font-weight:900;
+.feed-item b{
+  color:#fff;
 }
 
-.footer-brand span{
-  color:var(--lime);
+.feed-item em{
+  color:var(--red);
+  font-style:normal;
 }
 
-/* =========================================================
-   MODAL
-========================================================= */
-
-.modal-overlay{
-  position:fixed;
-
-  inset:0;
-
-  z-index:3000;
-
-  display:none;
-  align-items:center;
-  justify-content:center;
-
-  padding:20px;
-
-  background:rgba(0,0,0,.72);
-
-  backdrop-filter:blur(10px);
-}
-
-.modal-overlay.show{
+.bottom{
+  position:absolute;
+  left:18px;
+  right:18px;
+  bottom:18px;
   display:flex;
+  align-items:end;
+  justify-content:space-between;
 }
+
+.stat-box{
+  display:flex;
+  gap:6px;
+}
+
+.stat{
+  min-width:105px;
+  padding:11px 13px;
+  background:rgba(6,9,12,.89);
+  border:1px solid var(--line);
+  backdrop-filter:blur(12px);
+}
+
+.stat small{
+  display:block;
+  color:#707b86;
+  font-size:7px;
+  letter-spacing:1.4px;
+  text-transform:uppercase;
+}
+
+.stat strong{
+  display:block;
+  margin-top:5px;
+  font-size:16px;
+}
+
+.actions{
+  display:flex;
+  gap:6px;
+}
+
+.action{
+  height:54px;
+  min-width:90px;
+  border:1px solid var(--line);
+  background:rgba(7,10,13,.91);
+  color:#fff;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+.action:hover{
+  border-color:#68737e;
+}
+
+.action.accent{
+  color:var(--lime);
+  border-color:rgba(215,255,56,.4);
+}
+
+.player-marker{
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:var(--blue);
+  border:2px solid white;
+  box-shadow:0 0 0 5px rgba(66,170,255,.16),0 0 20px rgba(66,170,255,.65);
+}
+
+.player-marker.enemy{
+  background:var(--red);
+  box-shadow:0 0 0 5px rgba(255,62,72,.15),0 0 20px rgba(255,62,72,.65);
+}
+
+.player-marker.you{
+  width:18px;
+  height:18px;
+  background:var(--lime);
+  border-color:#10151a;
+  box-shadow:0 0 0 7px rgba(215,255,56,.18),0 0 25px rgba(215,255,56,.8);
+}
+
+/* =========================
+   MODAL
+========================= */
 
 .modal{
-  width:min(470px,100%);
-
-  padding:27px;
-
-  border-radius:22px;
-
-  background:
-    linear-gradient(145deg,#131a20,#090d12);
-
-  border:1px solid #2b343e;
-
-  box-shadow:
-    0 30px 100px rgba(0,0,0,.55);
-
-  animation:modalIn .25s ease;
-}
-
-.modal-head{
+  position:fixed;
+  inset:0;
+  z-index:5000;
   display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(0,0,0,.74);
+  backdrop-filter:blur(8px);
 }
 
-.modal-title{
-  font-size:22px;
-  font-weight:900;
-  letter-spacing:-.8px;
+.modal-card{
+  width:min(470px,100%);
+  padding:30px;
+  background:#0b0f14;
+  border:1px solid var(--line);
+  box-shadow:0 30px 100px rgba(0,0,0,.7);
 }
 
-.modal-close{
-  width:32px;
-  height:32px;
-
-  display:grid;
-  place-items:center;
-
-  border-radius:9px;
-
-  border:1px solid #2a333d;
-
-  background:#11171d;
-
-  color:#89939e;
-
-  cursor:pointer;
+.modal-card h3{
+  font-size:28px;
+  margin-bottom:8px;
 }
 
-.modal-description{
-  color:#77818c;
-
+.modal-card p{
+  color:#7d8791;
   font-size:11px;
   line-height:1.7;
-
-  margin-top:10px;
+  margin-bottom:20px;
 }
 
-.modal-options{
+.modal-actions{
   display:grid;
-
-  grid-template-columns:repeat(3,1fr);
-
-  gap:8px;
-
-  margin-top:21px;
+  gap:7px;
 }
 
-.mode-option{
-  padding:13px 8px;
-
-  border:1px solid #26303a;
-
-  background:#0c1116;
-
-  border-radius:11px;
-
-  text-align:center;
-
-  color:#7e8994;
-
-  font-size:9px;
-  font-weight:900;
-
-  cursor:pointer;
+.modal-actions button{
+  padding:14px;
+  text-align:left;
+  background:#11161c;
+  color:#fff;
+  border:1px solid var(--line);
 }
 
-.mode-option.selected{
-  color:#071000;
-
-  background:var(--lime);
-
+.modal-actions button:hover{
   border-color:var(--lime);
 }
 
-.modal-start{
-  width:100%;
-  margin-top:19px;
+/* =========================
+   RESULT
+========================= */
+
+.result{
+  position:fixed;
+  inset:0;
+  z-index:6000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:
+    radial-gradient(circle at center,rgba(215,255,56,.12),transparent 32%),
+    rgba(2,4,6,.97);
 }
 
-/* =========================================================
+.result-inner{
+  width:min(600px,90%);
+  text-align:center;
+}
+
+.result-kicker{
+  color:var(--lime);
+  font-size:9px;
+  letter-spacing:4px;
+  margin-bottom:15px;
+}
+
+.result h2{
+  font-size:clamp(65px,12vw,125px);
+  line-height:.85;
+  letter-spacing:-7px;
+}
+
+.result p{
+  color:#818c97;
+  font-size:11px;
+  margin-top:20px;
+}
+
+.result-stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+  margin:30px 0;
+}
+
+.result-stat{
+  padding:18px;
+  background:#0c1015;
+  border:1px solid var(--line);
+}
+
+.result-stat small{
+  color:#6d7883;
+  font-size:7px;
+  letter-spacing:1px;
+}
+
+.result-stat strong{
+  display:block;
+  margin-top:7px;
+  font-size:19px;
+}
+
+/* =========================
    TOAST
-========================================================= */
+========================= */
 
 .toast{
   position:fixed;
-
+  z-index:7000;
   left:50%;
-  bottom:25px;
-
-  z-index:5000;
-
-  transform:translate(-50%,20px);
-
+  bottom:100px;
+  transform:translateX(-50%) translateY(20px);
+  padding:13px 20px;
+  background:#0d1217;
+  border:1px solid rgba(215,255,56,.3);
+  color:#fff;
+  font-size:9px;
+  letter-spacing:1px;
   opacity:0;
-
-  pointer-events:none;
-
-  padding:12px 17px;
-
-  border:1px solid #2c3741;
-
-  background:#0c1116;
-
-  border-radius:12px;
-
-  box-shadow:0 15px 50px rgba(0,0,0,.4);
-
-  color:#dce2e6;
-
-  font-size:10px;
-  font-weight:800;
-
   transition:.25s;
+  pointer-events:none;
 }
 
 .toast.show{
   opacity:1;
-  transform:translate(-50%,0);
+  transform:translateX(-50%) translateY(0);
 }
 
-/* =========================================================
-   ANIMATIONS
-========================================================= */
+/* =========================
+   MOBILE
+========================= */
 
-@keyframes blink{
-  0%,100%{
-    opacity:1;
-  }
-
-  50%{
-    opacity:.35;
-  }
-}
-
-@keyframes locationPulse{
-  0%{
-    transform:scale(.75);
-    opacity:.8;
-  }
-
-  100%{
-    transform:scale(1.5);
-    opacity:0;
-  }
-}
-
-@keyframes modalIn{
-  from{
-    opacity:0;
-    transform:translateY(12px) scale(.98);
-  }
-
-  to{
-    opacity:1;
-    transform:translateY(0) scale(1);
-  }
-}
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-
-@media(max-width:1050px){
-
-  .nav-center{
-    display:none;
-  }
+@media(max-width:850px){
 
   .hero{
     grid-template-columns:1fr;
+    padding:60px 25px;
   }
 
-  .map-card{
-    height:510px;
-  }
-
-  .content{
-    grid-template-columns:1fr;
-  }
-
-  .dashboard{
-    grid-column:auto;
-  }
-
-  .feed{
-    grid-column:auto;
-  }
-
-}
-
-@media(max-width:700px){
-
-  .nav{
-    height:65px;
-    padding:0 17px;
-  }
-
-  .brand-text{
-    font-size:17px;
-  }
-
-  .brand-mark{
-    width:32px;
-    height:32px;
-  }
-
-  .live-status{
+  .hero-card{
     display:none;
   }
 
-  .hero{
-    padding:50px 17px 25px;
-    gap:30px;
+  .lobby-grid{
+    grid-template-columns:1fr;
+  }
+
+  .players{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
+@media(max-width:600px){
+
+  .status{
+    display:none;
   }
 
   .hero h1{
-    font-size:56px;
-    letter-spacing:-4px;
+    font-size:75px;
+    letter-spacing:-6px;
   }
 
-  .hero-description{
-    font-size:14px;
+  .lobby-content{
+    padding:35px 15px;
   }
 
-  .hero-actions{
-    flex-direction:column;
-    align-items:stretch;
+  .lobby-title h2{
+    font-size:35px;
   }
 
-  .btn{
-    width:100%;
-  }
-
-  .stats{
-    margin-top:28px;
-  }
-
-  .stat{
-    padding:13px;
-  }
-
-  .stat-value{
-    font-size:19px;
-  }
-
-  .stat-label{
-    font-size:8px;
-  }
-
-  .map-card{
-    height:430px;
-    border-radius:19px;
-  }
-
-  .content{
-    padding:12px 17px 60px;
-  }
-
-  .card{
-    padding:17px;
-    border-radius:17px;
-  }
-
-  .comp-name{
-    font-size:23px;
-  }
-
-  .dashboard{
+  .players{
     grid-template-columns:repeat(2,1fr);
   }
 
-  .checkpoints{
-    grid-template-columns:1fr;
+  .left-hud{
+    top:82px;
+    left:8px;
+    width:145px;
   }
 
-  .footer{
-    padding:22px 17px;
+  .right-hud{
+    top:82px;
+    right:8px;
+    width:145px;
   }
 
-  .footer-right{
+  .event{
+    top:78px;
+    min-width:215px;
+    padding:10px;
+  }
+
+  .event p{
     display:none;
   }
 
-}
+  .bottom{
+    left:8px;
+    right:8px;
+    bottom:8px;
+    display:block;
+  }
 
+  .stat-box{
+    margin-bottom:6px;
+  }
+
+  .stat{
+    flex:1;
+    min-width:0;
+  }
+
+  .stat strong{
+    font-size:13px;
+  }
+
+  .actions{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+  }
+
+  .action{
+    min-width:0;
+  }
+
+  .match-info .info-block:nth-child(2){
+    display:none;
+  }
+}
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<!-- =====================================================
+     HOME
+===================================================== -->
 
-<!-- =======================================================
-     NAVIGATION
-======================================================= -->
+<section id="home">
 
-<nav class="nav">
+  <div class="grid"></div>
 
-  <a href="#" class="brand">
+  <nav class="home-nav">
 
-    <div class="brand-mark">
-      M
+    <div class="logo">
+      KTR<span>X</span>
     </div>
 
-    <div class="brand-text">
-      KATIHAR<span>MOVE</span>
+    <div class="status">
+      <i class="dot"></i>
+      KATIHAR NETWORK ONLINE
     </div>
 
-  </a>
+  </nav>
 
+  <main class="hero">
 
-  <div class="nav-center">
+    <div>
 
-    <a href="#live" class="nav-link">
-      Live
-    </a>
+      <div class="eyebrow">
+        REAL-WORLD MULTIPLAYER
+      </div>
 
-    <a href="#competitions" class="nav-link">
-      Competitions
-    </a>
+      <h1>
+        KTR<span>X</span>
+      </h1>
 
-    <a href="#leaderboard" class="nav-link">
-      Leaderboard
-    </a>
+      <div class="tagline">
+        The city is your battlefield.
+        Walk. Jog. Run. Enter live solo matches
+        with players across Katihar.
+      </div>
 
-    <a href="#checkpoints" class="nav-link">
-      Checkpoints
-    </a>
+      <div class="hero-actions">
 
-  </div>
+        <button
+          class="btn primary"
+          onclick="openLobby()">
+          Play now
+        </button>
 
-
-  <div class="nav-actions">
-
-    <div class="live-status">
-      <span class="live-dot"></span>
-      KATIHAR LIVE
-    </div>
-
-    <div class="avatar">
-      A
-    </div>
-
-  </div>
-
-</nav>
-
-
-<!-- =======================================================
-     HERO
-======================================================= -->
-
-<section class="hero" id="live">
-
-  <div>
-
-    <div class="eyebrow">
-      KATIHAR'S REAL-WORLD MOVEMENT GAME
-    </div>
-
-
-    <h1>
-      MOVE.<br>
-      <span class="green">COMPETE.</span><br>
-      OWN IT.
-    </h1>
-
-
-    <p class="hero-description">
-      Walk. Jog. Run.
-      <strong>Turn the streets of Katihar into a live multiplayer game.</strong>
-      Race people around you, capture checkpoints and climb the city leaderboard.
-    </p>
-
-
-    <div class="hero-actions">
-
-      <button
-        class="btn btn-primary"
-        onclick="openRunModal()"
-      >
-        START MOVING →
-      </button>
-
-
-      <button
-        class="btn btn-secondary"
-        onclick="document.getElementById('competitions').scrollIntoView({behavior:'smooth'})"
-      >
-        EXPLORE COMPETITIONS
-      </button>
-
-    </div>
-
-
-    <div class="hero-note">
-      <span>●</span>
-      Free to play · Built for Katihar · Walk / Jog / Run
-    </div>
-
-
-    <div class="stats">
-
-      <div class="stat">
-
-        <div
-          class="stat-value"
-          id="activePlayers"
-        >
-          247
-        </div>
-
-        <div class="stat-label">
-          Players active
-        </div>
+        <button
+          class="btn"
+          onclick="showHow()">
+          How it works
+        </button>
 
       </div>
 
+    </div>
 
-      <div class="stat">
+    <div class="hero-card">
 
-        <div class="stat-value">
-          18
-        </div>
-
-        <div class="stat-label">
-          Live competitions
-        </div>
-
+      <div class="card-label">
+        KTRX // KATIHAR NETWORK
       </div>
 
+      <div class="radar"></div>
+      <div class="scan"></div>
 
-      <div class="stat">
+      <div class="fake-player fp1"></div>
+      <div class="fake-player fp2"></div>
+      <div class="fake-player fp3"></div>
+      <div class="fake-player fp4"></div>
 
-        <div
-          class="stat-value"
-          id="cityDistance"
-        >
-          1,284
+      <div class="card-bottom">
+
+        <div>
+          <small>PLAYERS ONLINE</small>
+          <strong id="onlineCount">184</strong>
         </div>
 
-        <div class="stat-label">
-          KM today
+        <div style="text-align:right">
+          <small>LIVE MATCHES</small>
+          <strong id="matchCount">7</strong>
         </div>
 
       </div>
 
     </div>
 
-  </div>
-
-
-  <!-- =====================================================
-       MAP
-  ====================================================== -->
-
-  <div class="map-shell">
-
-    <div class="map-card">
-
-      <div id="map"></div>
-
-
-      <div class="map-top">
-
-        <div class="map-chip green">
-
-          <span class="dot"></span>
-
-          LIVE CITY MAP
-
-        </div>
-
-
-        <div class="map-chip">
-
-          KATIHAR · INDIA
-
-        </div>
-
-      </div>
-
-
-      <div class="map-bottom">
-
-        <div class="map-info">
-
-          <div class="map-info-title">
-            CITY ACTIVITY
-          </div>
-
-          <div class="map-info-sub">
-            Live players moving around Katihar
-          </div>
-
-        </div>
-
-
-        <div
-          class="gps-state"
-          id="gpsState"
-        >
-          GPS STANDBY
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
+  </main>
 
 </section>
 
 
-<!-- =======================================================
-     CONTENT
-======================================================= -->
+<!-- =====================================================
+     LOBBY
+===================================================== -->
 
-<section class="content">
+<section id="lobby" class="hidden">
 
+  <header class="topbar">
 
-  <!-- LIVE COMPETITION -->
-
-  <div
-    class="card competition"
-    id="competitions"
-  >
-
-    <div class="card-header">
-
-      <div class="comp-live">
-        LIVE NOW
-      </div>
-
-      <div class="comp-time">
-        ENDS IN <span id="competitionTimer">42:18</span>
-      </div>
-
+    <div class="logo">
+      KTR<span>X</span>
     </div>
 
-
-    <div class="comp-name">
-      THE MORNING TAKEOVER
+    <div
+      class="back"
+      onclick="backHome()">
+      ← Back
     </div>
 
+  </header>
 
-    <div class="comp-sub">
-      Own the streets. Reach checkpoints. Beat everyone.
-    </div>
+  <main class="lobby-content">
 
-
-    <div class="comp-details">
-
-      <div class="detail-pill">
-        📍 <strong>Katihar City</strong>
-      </div>
-
-      <div class="detail-pill">
-        🏁 <strong>5 KM</strong>
-      </div>
-
-      <div class="detail-pill">
-        👥 <strong>86 Players</strong>
-      </div>
-
-      <div class="detail-pill">
-        💰 <strong>FREE</strong>
-      </div>
-
-    </div>
-
-
-    <div class="progress-wrap">
-
-      <div class="progress-top">
-
-        <span>
-          CITY PARTICIPATION
-        </span>
-
-        <span>
-          73%
-        </span>
-
-      </div>
-
-
-      <div class="progress">
-
-        <div class="progress-bar"></div>
-
-      </div>
-
-    </div>
-
-
-    <div class="comp-bottom">
-
-      <div class="comp-time">
-        More players are joining right now
-      </div>
-
-      <button
-        class="btn btn-primary join-btn"
-        onclick="openRunModal()"
-      >
-        JOIN RACE
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <!-- LEADERBOARD -->
-
-  <div
-    class="card"
-    id="leaderboard"
-  >
-
-    <div class="card-header">
-
-      <div class="card-title">
-        LIVE LEADERBOARD
-      </div>
-
-      <div class="card-kicker">
-        REAL TIME
-      </div>
-
-    </div>
-
-
-    <div class="leader-row">
-
-      <div class="rank first">
-        01
-      </div>
-
-      <div class="person">
-
-        <div class="person-avatar">
-          R
-        </div>
-
-        <div>
-
-          <div class="person-name">
-            Rahul Singh
-          </div>
-
-          <div class="person-mode">
-            RUNNER · 5.8 KM
-          </div>
-
-        </div>
-
-      </div>
-
-      <div class="score">
-        842 XP
-      </div>
-
-    </div>
-
-
-    <div class="leader-row">
-
-      <div class="rank">
-        02
-      </div>
-
-      <div class="person">
-
-        <div class="person-avatar">
-          S
-        </div>
-
-        <div>
-
-          <div class="person-name">
-            Shivam
-          </div>
-
-          <div class="person-mode">
-            RUNNER · 5.2 KM
-          </div>
-
-        </div>
-
-      </div>
-
-      <div class="score">
-        801 XP
-      </div>
-
-    </div>
-
-
-    <div class="leader-row">
-
-      <div class="rank">
-        03
-      </div>
-
-      <div class="person">
-
-        <div class="person-avatar">
-          P
-        </div>
-
-        <div>
-
-          <div class="person-name">
-            Priya K.
-          </div>
-
-          <div class="person-mode">
-            JOGGER · 4.7 KM
-          </div>
-
-        </div>
-
-      </div>
-
-      <div class="score">
-        764 XP
-      </div>
-
-    </div>
-
-
-    <div class="leader-row">
-
-      <div class="rank">
-        04
-      </div>
-
-      <div class="person">
-
-        <div class="person-avatar">
-          A
-        </div>
-
-        <div>
-
-          <div class="person-name">
-            Aman
-          </div>
-
-          <div class="person-mode">
-            WALKER · 4.1 KM
-          </div>
-
-        </div>
-
-      </div>
-
-      <div class="score">
-        721 XP
-      </div>
-
-    </div>
-
-
-    <div class="leader-row">
-
-      <div class="rank">
-        05
-      </div>
-
-      <div class="person">
-
-        <div class="person-avatar">
-          N
-        </div>
-
-        <div>
-
-          <div class="person-name">
-            Nikhil
-          </div>
-
-          <div class="person-mode">
-            RUNNER · 3.8 KM
-          </div>
-
-        </div>
-
-      </div>
-
-      <div class="score">
-        698 XP
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- PERSONAL LIVE DASHBOARD -->
-
-  <div class="dashboard">
-
-    <div class="metric">
-
-      <div class="metric-icon">
-        ◉
-      </div>
-
-      <div
-        class="metric-value"
-        id="myDistance"
-      >
-        0.00 km
-      </div>
-
-      <div class="metric-label">
-        Your distance
-      </div>
-
-    </div>
-
-
-    <div class="metric">
-
-      <div class="metric-icon">
-        ◷
-      </div>
-
-      <div
-        class="metric-value"
-        id="myTime"
-      >
-        00:00
-      </div>
-
-      <div class="metric-label">
-        Moving time
-      </div>
-
-    </div>
-
-
-    <div class="metric">
-
-      <div class="metric-icon">
-        ⚡
-      </div>
-
-      <div
-        class="metric-value"
-        id="myPace"
-      >
-        --
-      </div>
-
-      <div class="metric-label">
-        Pace / km
-      </div>
-
-    </div>
-
-
-    <div class="metric">
-
-      <div class="metric-icon">
-        ★
-      </div>
-
-      <div
-        class="metric-value"
-        id="myXP"
-      >
-        0 XP
-      </div>
-
-      <div class="metric-label">
-        Session XP
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- CHECKPOINTS -->
-
-  <div
-    class="card"
-    id="checkpoints"
-  >
-
-    <div class="card-header">
-
-      <div class="card-title">
-        CITY CHECKPOINTS
-      </div>
-
-      <div class="card-kicker">
-        CAPTURE THEM
-      </div>
-
-    </div>
-
-
-    <div class="checkpoints">
-
-      <div class="checkpoint active">
-
-        <div class="checkpoint-number">
-          01
-        </div>
-
-        <div class="checkpoint-name">
-          Katihar Junction
-        </div>
-
-        <div class="checkpoint-distance">
-          START ZONE · +100 XP
-        </div>
-
-      </div>
-
-
-      <div class="checkpoint">
-
-        <div class="checkpoint-number">
-          02
-        </div>
-
-        <div class="checkpoint-name">
-          Shahid Chowk
-        </div>
-
-        <div class="checkpoint-distance">
-          CHECKPOINT · +150 XP
-        </div>
-
-      </div>
-
-
-      <div class="checkpoint">
-
-        <div class="checkpoint-number">
-          03
-        </div>
-
-        <div class="checkpoint-name">
-          Mirchaibari
-        </div>
-
-        <div class="checkpoint-distance">
-          CHECKPOINT · +200 XP
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- ACTIVITY -->
-
-  <div class="card feed">
-
-    <div class="card-header">
-
-      <div class="card-title">
-        LIVE CITY ACTIVITY
-      </div>
-
-      <div class="card-kicker">
-        KATIHAR RIGHT NOW
-      </div>
-
-    </div>
-
-
-    <div id="activityFeed">
-
-      <div class="feed-item">
-
-        <div class="feed-icon">
-          🏁
-        </div>
-
-        <div class="feed-copy">
-
-          <div class="feed-text">
-            <strong>Rahul</strong>
-            captured Checkpoint #3
-          </div>
-
-          <div class="feed-time">
-            8 seconds ago
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div class="feed-item">
-
-        <div class="feed-icon">
-          ⚡
-        </div>
-
-        <div class="feed-copy">
-
-          <div class="feed-text">
-            <strong>Priya</strong>
-            entered The Morning Takeover
-          </div>
-
-          <div class="feed-time">
-            24 seconds ago
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div class="feed-item">
-
-        <div class="feed-icon">
-          ↑
-        </div>
-
-        <div class="feed-copy">
-
-          <div class="feed-text">
-            <strong>Shivam</strong>
-            moved into 2nd place
-          </div>
-
-          <div class="feed-time">
-            41 seconds ago
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div class="feed-item">
-
-        <div class="feed-icon">
-          🏃
-        </div>
-
-        <div class="feed-copy">
-
-          <div class="feed-text">
-            <strong>Aman</strong>
-            started a new 5 KM run
-          </div>
-
-          <div class="feed-time">
-            1 minute ago
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =======================================================
-     FOOTER
-======================================================= -->
-
-<footer class="footer">
-
-  <div class="footer-brand">
-    KATIHAR<span>MOVE</span>
-  </div>
-
-  <div>
-    MOVE. COMPETE. OWN YOUR CITY.
-  </div>
-
-  <div class="footer-right">
-    FREE · BUILT FOR KATIHAR
-  </div>
-
-</footer>
-
-</div>
-
-
-<!-- =======================================================
-     RUN MODAL
-======================================================= -->
-
-<div
-  class="modal-overlay"
-  id="runModal"
->
-
-  <div class="modal">
-
-    <div class="modal-head">
+    <div class="lobby-title">
 
       <div>
 
-        <div class="modal-title">
-          Start your move
+        <div class="eyebrow">
+          MATCHMAKING
         </div>
 
-        <div class="modal-description">
-          Choose how you're moving today.
-          GPS will track your active session.
-        </div>
+        <h2>
+          Find a match.
+        </h2>
 
       </div>
 
-
-      <button
-        class="modal-close"
-        onclick="closeRunModal()"
-      >
-        ×
-      </button>
-
-    </div>
-
-
-    <div class="modal-options">
-
-      <div
-        class="mode-option"
-        data-mode="WALK"
-        onclick="selectMode(this)"
-      >
-        🚶<br><br>
-        WALK
-      </div>
-
-
-      <div
-        class="mode-option selected"
-        data-mode="JOG"
-        onclick="selectMode(this)"
-      >
-        🏃<br><br>
-        JOG
-      </div>
-
-
-      <div
-        class="mode-option"
-        data-mode="RUN"
-        onclick="selectMode(this)"
-      >
-        ⚡<br><br>
-        RUN
+      <div class="match-code">
+        KTRX // SOLO
       </div>
 
     </div>
 
+    <div class="lobby-grid">
 
-    <button
-      class="btn btn-primary modal-start"
-      onclick="startRun()"
-    >
-      START GPS SESSION →
-    </button>
+      <div class="panel">
 
-  </div>
+        <div class="panel-head">
 
-</div>
+          <span>
+            LIVE LOBBY
+          </span>
 
+          <span id="lobbyCount">
+            23 / 30
+          </span>
 
-<!-- TOAST -->
-
-<div
-  class="toast"
-  id="toast"
-></div>
-
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-
-<script>
-
-/* =========================================================
-   GLOBAL STATE
-========================================================= */
-
-let map;
-
-let myMarker = null;
-
-let gpsWatcher = null;
-
-let tracking = false;
-
-let selectedMode = "JOG";
-
-let sessionStart = null;
-
-let timerInterval = null;
-
-let lastPosition = null;
-
-let totalDistance = 0;
-
-let sessionXP = 0;
-
-let simulatedPlayers = [];
-
-let playerMarkers = [];
-
-
-/* =========================================================
-   KATIHAR MAP
-========================================================= */
-
-const KATIHAR_CENTER = [
-  25.5391,
-  87.5785
-];
-
-
-/* =========================================================
-   INIT MAP
-========================================================= */
-
-function initMap(){
-
-  map = L.map("map",{
-    zoomControl:true,
-    attributionControl:true
-  }).setView(
-    KATIHAR_CENTER,
-    14
-  );
-
-
-  L.tileLayer(
-    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    {
-      maxZoom:19,
-      attribution:
-        '&copy; OpenStreetMap contributors'
-    }
-  ).addTo(map);
-
-
-  addCheckpoints();
-
-  createSimulatedPlayers();
-
-}
-
-
-/* =========================================================
-   CHECKPOINTS
-========================================================= */
-
-function addCheckpoints(){
-
-  const checkpoints = [
-
-    {
-      name:"Katihar Junction",
-      lat:25.5379,
-      lng:87.5707,
-      xp:100
-    },
-
-    {
-      name:"Shahid Chowk",
-      lat:25.5427,
-      lng:87.5814,
-      xp:150
-    },
-
-    {
-      name:"Mirchaibari",
-      lat:25.5456,
-      lng:87.5665,
-      xp:200
-    }
-
-  ];
-
-
-  checkpoints.forEach((checkpoint,index)=>{
-
-    const icon = L.divIcon({
-
-      className:"",
-
-      html:`
-        <div style="
-          width:30px;
-          height:30px;
-          border-radius:50%;
-          background:#10161c;
-          border:2px solid #a3ff12;
-          color:#a3ff12;
-          display:grid;
-          place-items:center;
-          font-size:9px;
-          font-weight:900;
-          box-shadow:0 0 0 5px rgba(163,255,18,.09);
-        ">
-          ${index+1}
         </div>
-      `,
 
-      iconSize:[30,30],
-
-      iconAnchor:[15,15]
-
-    });
-
-
-    L.marker(
-      [checkpoint.lat,checkpoint.lng],
-      {icon}
-    )
-    .addTo(map)
-    .bindPopup(`
-      <strong>${checkpoint.name}</strong><br>
-      +${checkpoint.xp} XP
-    `);
-
-  });
-
-}
-
-
-/* =========================================================
-   SIMULATED LIVE PLAYERS
-========================================================= */
-
-function createSimulatedPlayers(){
-
-  const players = [
-
-    {
-      name:"Rahul",
-      initial:"R",
-      lat:25.5432,
-      lng:87.5702,
-      color:"lime"
-    },
-
-    {
-      name:"Shivam",
-      initial:"S",
-      lat:25.5358,
-      lng:87.5838,
-      color:"cyan"
-    },
-
-    {
-      name:"Priya",
-      initial:"P",
-      lat:25.5475,
-      lng:87.5792,
-      color:"yellow"
-    },
-
-    {
-      name:"Aman",
-      initial:"A",
-      lat:25.5329,
-      lng:87.5752,
-      color:"red"
-    },
-
-    {
-      name:"Nikhil",
-      initial:"N",
-      lat:25.5411,
-      lng:87.5900,
-      color:"lime"
-    }
-
-  ];
-
-
-  players.forEach(player=>{
-
-    const icon = L.divIcon({
-
-      className:"",
-
-      html:`
-        <div class="player-marker ${player.color}">
-          ${player.initial}
+        <div
+          class="players"
+          id="playersGrid">
         </div>
-      `,
 
-      iconSize:[35,35],
-
-      iconAnchor:[17.5,17.5]
-
-    });
-
-
-    const marker = L.marker(
-      [player.lat,player.lng],
-      {icon}
-    )
-    .addTo(map)
-    .bindPopup(`
-      <strong>${player.name}</strong><br>
-      Active player
-    `);
-
-
-    simulatedPlayers.push({
-      ...player,
-      marker
-    });
-
-  });
-
-
-  /*
-    Simulated movement only for prototype.
-    This will later be replaced by Supabase Realtime.
-  */
-
-  setInterval(()=>{
-
-    simulatedPlayers.forEach(player=>{
-
-      const lat =
-        player.lat +
-        (Math.random()-.5)*0.00025;
-
-      const lng =
-        player.lng +
-        (Math.random()-.5)*0.00025;
-
-      player.lat = lat;
-      player.lng = lng;
-
-      player.marker.setLatLng([
-        lat,
-        lng
-      ]);
-
-    });
-
-  },2500);
-
-}
-
-
-/* =========================================================
-   GPS SESSION
-========================================================= */
-
-function startRun(){
-
-  closeRunModal();
-
-
-  if(!navigator.geolocation){
-
-    showToast(
-      "GPS is not supported by this browser."
-    );
-
-    return;
-  }
-
-
-  if(tracking){
-
-    stopRun();
-
-    return;
-  }
-
-
-  tracking = true;
-
-  sessionStart = Date.now();
-
-  lastPosition = null;
-
-  totalDistance = 0;
-
-  sessionXP = 0;
-
-
-  document.getElementById(
-    "gpsState"
-  ).textContent = "GPS CONNECTING...";
-
-
-  document.getElementById(
-    "gpsState"
-  ).style.color = "#ffd84d";
-
-
-  gpsWatcher =
-    navigator.geolocation.watchPosition(
-
-      handleGPS,
-
-      handleGPSError,
-
-      {
-        enableHighAccuracy:true,
-        maximumAge:1500,
-        timeout:15000
-      }
-
-    );
-
-
-  timerInterval = setInterval(
-    updateSessionUI,
-    1000
-  );
-
-
-  showToast(
-    "GPS session started — allow location access."
-  );
-
-
-  updateSessionUI();
-
-}
-
-
-/* =========================================================
-   GPS SUCCESS
-========================================================= */
-
-function handleGPS(position){
-
-  const latitude =
-    position.coords.latitude;
-
-  const longitude =
-    position.coords.longitude;
-
-  const accuracy =
-    position.coords.accuracy;
-
-
-  console.log(
-    "KATIHAR MOVE GPS:",
-    latitude,
-    longitude,
-    "±",
-    accuracy,
-    "m"
-  );
-
-
-  document.getElementById(
-    "gpsState"
-  ).textContent =
-    `GPS LIVE · ±${Math.round(accuracy)}m`;
-
-
-  document.getElementById(
-    "gpsState"
-  ).style.color =
-    "#83f6a9";
-
-
-  const current = {
-    lat:latitude,
-    lng:longitude,
-    time:Date.now()
-  };
-
-
-  if(lastPosition){
-
-    const delta =
-      calculateDistance(
-        lastPosition.lat,
-        lastPosition.lng,
-        current.lat,
-        current.lng
-      );
-
-
-    /*
-      Ignore impossible GPS jumps.
-      150m between two browser readings is treated
-      as GPS noise rather than movement.
-    */
-
-    if(
-      delta > 0 &&
-      delta < 0.15
-    ){
-
-      totalDistance += delta;
-
-      sessionXP =
-        Math.floor(totalDistance * 100);
-
-    }
-
-  }
-
-
-  lastPosition = current;
-
-
-  updateMyMarker(
-    latitude,
-    longitude,
-    accuracy
-  );
-
-
-  updateSessionUI();
-
-}
-
-
-/* =========================================================
-   CREATE / MOVE USER MARKER
-========================================================= */
-
-function updateMyMarker(
-  latitude,
-  longitude,
-  accuracy
-){
-
-  const icon = L.divIcon({
-
-    className:"",
-
-    html:`
-      <div class="you-marker">
-        YOU
       </div>
-    `,
 
-    iconSize:[45,45],
 
-    iconAnchor:[22.5,22.5]
+      <div class="panel">
 
-  });
+        <div class="panel-head">
 
+          <span>
+            MATCH RULES
+          </span>
 
-  if(!myMarker){
+        </div>
 
-    myMarker =
-      L.marker(
-        [latitude,longitude],
-        {
-          icon,
-          zIndexOffset:1000
-        }
-      )
-      .addTo(map)
-      .bindPopup(
-        "<strong>You</strong><br>Live location"
-      );
+        <div class="rules">
 
-  }else{
+          <div class="rule">
 
-    myMarker.setLatLng([
-      latitude,
-      longitude
-    ]);
+            <div class="rule-icon">
+              30
+            </div>
 
-  }
+            <div>
 
+              <strong>
+                30 SOLO PLAYERS
+              </strong>
 
-  /*
-    First GPS fix:
-    center the map on the player.
-  */
+              <p>
+                Every player enters alone.
+              </p>
 
-  if(
-    !myMarker._hasCentered
-  ){
+            </div>
 
-    map.setView(
-      [latitude,longitude],
-      16
-    );
+          </div>
 
-    myMarker._hasCentered = true;
 
-  }
+          <div class="rule">
 
-}
+            <div class="rule-icon">
+              25'
+            </div>
 
+            <div>
 
-/* =========================================================
-   GPS ERROR
-========================================================= */
+              <strong>
+                25 MINUTES
+              </strong>
 
-function handleGPSError(error){
+              <p>
+                Survive the match.
+              </p>
 
-  console.error(
-    "GPS ERROR:",
-    error
-  );
+            </div>
 
+          </div>
 
-  let message =
-    "Unable to get your location.";
 
+          <div class="rule">
 
-  if(error.code === 1){
+            <div class="rule-icon">
+              RUN
+            </div>
 
-    message =
-      "Location permission denied. Allow Location for this site.";
+            <div>
 
-  }
+              <strong>
+                MOVE TO PLAY
+              </strong>
 
-  if(error.code === 2){
+              <p>
+                Real-world movement drives gameplay.
+              </p>
 
-    message =
-      "Your location could not be determined.";
+            </div>
 
-  }
+          </div>
 
-  if(error.code === 3){
 
-    message =
-      "GPS request timed out. Try again outdoors.";
+          <div class="rule">
 
-  }
+            <div class="rule-icon">
+              01
+            </div>
 
+            <div>
 
-  document.getElementById(
-    "gpsState"
-  ).textContent =
-    "GPS ERROR";
+              <strong>
+                ONE WINNER
+              </strong>
 
+              <p>
+                Only one player takes the match.
+              </p>
 
-  document.getElementById(
-    "gpsState"
-  ).style.color =
-    "#ff6875";
+            </div>
 
+          </div>
 
-  showToast(message);
 
-}
+          <button
+            class="btn primary"
+            style="width:100%;margin-top:20px"
+            onclick="startMatch()">
 
+            Enter match
 
-/* =========================================================
-   STOP RUN
-========================================================= */
+          </button>
 
-function stopRun(){
+        </div>
 
-  if(
-    gpsWatcher !== null
-  ){
+      </div>
 
-    navigator.geolocation.clearWatch(
-      gpsWatcher
-    );
+    </div>
 
-    gpsWatcher = null;
+  </main>
 
-  }
+</section>
 
 
-  if(
-    timerInterval !== null
-  ){
+<!-- =====================================================
+     MATCH
+===================================================== -->
 
-    clearInterval(
-      timerInterval
-    );
+<section
+  id="match"
+  class="hidden">
 
-    timerInterval = null;
+  <div id="map"></div>
 
-  }
+  <div class="hud">
 
+    <div class="match-top">
 
-  tracking = false;
+      <div>
 
+        <div class="hud-logo">
+          KTR<span>X</span>
+        </div>
 
-  document.getElementById(
-    "gpsState"
-  ).textContent =
-    "GPS STANDBY";
+        <div class="live">
+          <i></i>
+          LIVE MATCH
+        </div>
 
+      </div>
 
-  document.getElementById(
-    "gpsState"
-  ).style.color =
-    "#83f6a9";
 
+      <div class="match-info">
 
-  showToast(
-    `Session finished · ${totalDistance.toFixed(2)} km · +${sessionXP} XP`
-  );
+        <div class="info-block">
 
+          <small>
+            Players alive
+          </small>
 
-  updateSessionUI();
+          <strong id="alive">
+            30
+          </strong>
 
-}
-
-
-/* =========================================================
-   SESSION UI
-========================================================= */
-
-function updateSessionUI(){
-
-  if(!sessionStart){
-
-    document.getElementById(
-      "myTime"
-    ).textContent =
-      "00:00";
-
-    return;
-
-  }
-
-
-  const elapsed =
-    Math.floor(
-      (Date.now() - sessionStart) / 1000
-    );
-
-
-  const hours =
-    Math.floor(elapsed / 3600);
-
-  const minutes =
-    Math.floor(
-      (elapsed % 3600) / 60
-    );
-
-  const seconds =
-    elapsed % 60;
-
-
-  let timeString;
-
-
-  if(hours > 0){
-
-    timeString =
-      `${String(hours).padStart(2,"0")}:` +
-      `${String(minutes).padStart(2,"0")}:` +
-      `${String(seconds).padStart(2,"0")}`;
-
-  }else{
-
-    timeString =
-      `${String(minutes).padStart(2,"0")}:` +
-      `${String(seconds).padStart(2,"0")}`;
-
-  }
-
-
-  document.getElementById(
-    "myTime"
-  ).textContent =
-    timeString;
-
-
-  document.getElementById(
-    "myDistance"
-  ).textContent =
-    `${totalDistance.toFixed(2)} km`;
-
-
-  document.getElementById(
-    "myXP"
-  ).textContent =
-    `${sessionXP} XP`;
-
-
-  if(totalDistance > 0){
-
-    const paceSeconds =
-      elapsed / totalDistance;
-
-
-    const paceMinutes =
-      Math.floor(
-        paceSeconds / 60
-      );
-
-
-    const paceRemaining =
-      Math.floor(
-        paceSeconds % 60
-      );
-
-
-    document.getElementById(
-      "myPace"
-    ).textContent =
-      `${paceMinutes}:${String(
-        paceRemaining
-      ).padStart(2,"0")}`;
-
-  }
-
-}
-
-
-/* =========================================================
-   HAVERSINE DISTANCE
-========================================================= */
-
-function calculateDistance(
-  lat1,
-  lon1,
-  lat2,
-  lon2
-){
-
-  const earthRadius = 6371;
-
-  const dLat =
-    toRadians(lat2 - lat1);
-
-  const dLon =
-    toRadians(lon2 - lon1);
-
-
-  const a =
-    Math.sin(dLat / 2) *
-    Math.sin(dLat / 2) +
-
-    Math.cos(
-      toRadians(lat1)
-    ) *
-
-    Math.cos(
-      toRadians(lat2)
-    ) *
-
-    Math.sin(dLon / 2) *
-    Math.sin(dLon / 2);
-
-
-  const c =
-    2 *
-    Math.atan2(
-      Math.sqrt(a),
-      Math.sqrt(1-a)
-    );
-
-
-  return earthRadius * c;
-
-}
-
-
-function toRadians(value){
-
-  return value *
-    Math.PI /
-    180;
-
-}
-
-
-/* =========================================================
-   RUN MODAL
-========================================================= */
-
-function openRunModal(){
-
-  document
-    .getElementById("runModal")
-    .classList
-    .add("show");
-
-}
-
-
-function closeRunModal(){
-
-  document
-    .getElementById("runModal")
-    .classList
-    .remove("show");
-
-}
-
-
-function selectMode(element){
-
-  document
-    .querySelectorAll(".mode-option")
-    .forEach(option=>{
-
-      option.classList.remove(
-        "selected"
-      );
-
-    });
-
-
-  element.classList.add(
-    "selected"
-  );
-
-
-  selectedMode =
-    element.dataset.mode;
-
-}
-
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-let toastTimer = null;
-
-
-function showToast(message){
-
-  const toast =
-    document.getElementById(
-      "toast"
-    );
-
-
-  toast.textContent =
-    message;
-
-
-  toast.classList.add(
-    "show"
-  );
-
-
-  clearTimeout(
-    toastTimer
-  );
-
-
-  toastTimer =
-    setTimeout(()=>{
-
-      toast.classList.remove(
-        "show"
-      );
-
-    },3200);
-
-}
-
-
-/* =========================================================
-   COMPETITION TIMER
-========================================================= */
-
-let competitionSeconds =
-  42 * 60 + 18;
-
-
-setInterval(()=>{
-
-  competitionSeconds--;
-
-
-  if(
-    competitionSeconds < 0
-  ){
-
-    competitionSeconds =
-      42 * 60 + 18;
-
-  }
-
-
-  const minutes =
-    Math.floor(
-      competitionSeconds / 60
-    );
-
-
-  const seconds =
-    competitionSeconds % 60;
-
-
-  document.getElementById(
-    "competitionTimer"
-  ).textContent =
-    `${String(minutes).padStart(2,"0")}:` +
-    `${String(seconds).padStart(2,"0")}`;
-
-},1000);
-
-
-/* =========================================================
-   LIVE CITY NUMBERS
-========================================================= */
-
-setInterval(()=>{
-
-  const element =
-    document.getElementById(
-      "activePlayers"
-    );
-
-
-  let value =
-    Number(
-      element.textContent
-    );
-
-
-  value +=
-    Math.random() > .5
-      ? 1
-      : -1;
-
-
-  if(value < 200){
-
-    value = 200;
-
-  }
-
-
-  element.textContent =
-    value;
-
-},3500);
-
-
-setInterval(()=>{
-
-  const element =
-    document.getElementById(
-      "cityDistance"
-    );
-
-
-  let value =
-    Number(
-      element.textContent
-        .replace(/,/g,"")
-    );
-
-
-  if(
-    Math.random() > .35
-  ){
-
-    value +=
-      Math.floor(
-        Math.random() * 3
-      ) + 1;
-
-  }
-
-
-  element.textContent =
-    value.toLocaleString();
-
-},5000);
-
-
-/* =========================================================
-   CLOSE MODAL WHEN CLICKING OUTSIDE
-========================================================= */
-
-document
-  .getElementById("runModal")
-  .addEventListener(
-    "click",
-    event=>{
-
-      if(
-        event.target.id ===
-        "runModal"
-      ){
-
-        closeRunModal();
-
-      }
-
-    }
-  );
-
-
-/* =========================================================
-   ESC KEY
-========================================================= */
-
-document.addEventListener(
-  "keydown",
-  event=>{
-
-    if(
-      event.key === "Escape"
-    ){
-
-      closeRunModal();
-
-    }
-
-  }
-);
-
-
-/* =========================================================
-   START APPLICATION
-========================================================= */
-
-document.addEventListener(
-  "DOMContentLoaded",
-  ()=>{
-
-    initMap();
-
-    console.log(
-      "KATIHAR MOVE initialized."
-    );
-
-    console.log(
-      "Real GPS is ready."
-    );
-
-    console.log(
-      "Realtime multiplayer will be connected through Supabase."
-    );
-
-  }
-);
-
-</script>
-
-</body>
-</html>
+        </div>
