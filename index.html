@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KATIHAR MOVE — Move. Compete. Own Your City.</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Inter,Arial,sans-serif;
+  background:#080a0d;
+  color:#f5f7fa;
+  min-height:100vh;
+}
+
+button{
+  font-family:inherit;
+  cursor:pointer;
+}
+
+.app{
+  min-height:100vh;
+}
+
+/* NAV */
+
+nav{
+  height:72px;
+  border-bottom:1px solid #20242a;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 5%;
+  background:rgba(8,10,13,.94);
+  position:sticky;
+  top:0;
+  z-index:50;
+  backdrop-filter:blur(20px);
+}
+
+.logo{
+  font-weight:900;
+  font-size:22px;
+  letter-spacing:-1px;
+}
+
+.logo span{
+  color:#7cff00;
+}
+
+.nav-right{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+
+.live-pill{
+  border:1px solid #29312a;
+  background:#10150e;
+  color:#9dff54;
+  padding:9px 14px;
+  border-radius:30px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.avatar{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#7cff00,#00d4ff);
+  color:#050607;
+  display:grid;
+  place-items:center;
+  font-weight:900;
+}
+
+/* HERO */
+
+.hero{
+  padding:70px 5% 40px;
+  display:grid;
+  grid-template-columns:1fr 1.2fr;
+  gap:45px;
+  max-width:1500px;
+  margin:auto;
+}
+
+.eyebrow{
+  color:#7cff00;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:2px;
+  margin-bottom:18px;
+}
+
+h1{
+  font-size:clamp(48px,7vw,92px);
+  line-height:.9;
+  letter-spacing:-5px;
+  margin-bottom:25px;
+}
+
+h1 span{
+  color:#7cff00;
+}
+
+.hero-copy{
+  color:#9299a3;
+  font-size:17px;
+  line-height:1.7;
+  max-width:540px;
+}
+
+.hero-buttons{
+  display:flex;
+  gap:12px;
+  margin-top:30px;
+}
+
+.primary{
+  background:#7cff00;
+  color:#050607;
+  border:none;
+  padding:15px 22px;
+  border-radius:12px;
+  font-weight:900;
+  font-size:14px;
+}
+
+.secondary{
+  background:#15191e;
+  color:white;
+  border:1px solid #292e35;
+  padding:15px 22px;
+  border-radius:12px;
+  font-weight:800;
+}
+
+/* STATS */
+
+.quick-stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:45px;
+}
+
+.stat{
+  background:#101318;
+  border:1px solid #20252b;
+  padding:18px;
+  border-radius:15px;
+}
+
+.stat-number{
+  font-size:25px;
+  font-weight:900;
+}
+
+.stat-label{
+  color:#707782;
+  font-size:11px;
+  margin-top:5px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+
+/* MAP */
+
+.map-wrap{
+  position:relative;
+}
+
+.map{
+  height:520px;
+  border-radius:25px;
+  overflow:hidden;
+  position:relative;
+  border:1px solid #242a30;
+  background:
+    linear-gradient(35deg,transparent 48%,rgba(255,255,255,.04) 49%,transparent 50%),
+    linear-gradient(120deg,transparent 48%,rgba(255,255,255,.035) 49%,transparent 50%),
+    #101419;
+  background-size:90px 90px,120px 120px,auto;
+}
+
+/* fake road network */
+
+.road{
+  position:absolute;
+  height:2px;
+  background:#343a42;
+  transform-origin:left;
+}
+
+.r1{width:100%;top:35%;left:0;transform:rotate(-8deg)}
+.r2{width:90%;top:68%;left:4%;transform:rotate(11deg)}
+.r3{width:75%;top:48%;left:15%;transform:rotate(57deg)}
+.r4{width:80%;top:18%;left:8%;transform:rotate(18deg)}
+.r5{width:70%;top:75%;left:30%;transform:rotate(-53deg)}
+
+.map-label{
+  position:absolute;
+  font-size:11px;
+  color:#626b76;
+  font-weight:700;
+}
+
+.l1{top:12%;left:15%}
+.l2{top:50%;left:62%}
+.l3{top:78%;left:20%}
+.l4{top:27%;right:12%}
+
+/* player markers */
+
+.player{
+  position:absolute;
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:3px solid #080a0d;
+  display:grid;
+  place-items:center;
+  font-size:15px;
+  font-weight:900;
+  color:#050607;
+  box-shadow:0 0 0 5px rgba(124,255,0,.14),0 0 30px rgba(124,255,0,.35);
+  background:#7cff00;
+  animation:pulse 2s infinite;
+}
+
+.player small{
+  position:absolute;
+  top:44px;
+  white-space:nowrap;
+  background:#080a0d;
+  border:1px solid #30363d;
+  padding:5px 8px;
+  border-radius:7px;
+  color:white;
+  font-size:9px;
+}
+
+.p1{left:22%;top:30%}
+.p2{left:48%;top:45%;background:#00d4ff;box-shadow:0 0 0 5px rgba(0,212,255,.12)}
+.p3{left:72%;top:23%}
+.p4{left:62%;top:70%;background:#ffcf33;box-shadow:0 0 0 5px rgba(255,207,51,.12)}
+.p5{left:35%;top:76%}
+
+@keyframes pulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.08)}
+}
+
+.map-top{
+  position:absolute;
+  top:18px;
+  left:18px;
+  right:18px;
+  display:flex;
+  justify-content:space-between;
+  z-index:5;
+}
+
+.map-badge{
+  background:rgba(5,7,9,.9);
+  border:1px solid #30363d;
+  padding:10px 13px;
+  border-radius:10px;
+  font-size:11px;
+  font-weight:800;
+}
+
+.map-badge span{
+  color:#7cff00;
+}
+
+/* CONTENT */
+
+.content{
+  max-width:1500px;
+  margin:auto;
+  padding:20px 5% 80px;
+  display:grid;
+  grid-template-columns:1.5fr 1fr;
+  gap:20px;
+}
+
+.card{
+  background:#101318;
+  border:1px solid #20252b;
+  border-radius:20px;
+  padding:22px;
+}
+
+.card-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.card-title{
+  font-size:17px;
+  font-weight:900;
+}
+
+.muted{
+  color:#737b86;
+  font-size:11px;
+}
+
+/* COMPETITION */
+
+.competition{
+  background:
+    radial-gradient(circle at 80% 0%,rgba(124,255,0,.14),transparent 35%),
+    #11161a;
+}
+
+.comp-top{
+  display:flex;
+  justify-content:space-between;
+}
+
+.live{
+  color:#ff5050;
+  font-size:11px;
+  font-weight:900;
+}
+
+.comp-name{
+  font-size:29px;
+  font-weight:900;
+  margin:13px 0 5px;
+}
+
+.comp-meta{
+  color:#7d858f;
+  font-size:12px;
+}
+
+.progress{
+  height:7px;
+  background:#252b31;
+  border-radius:20px;
+  margin:25px 0 10px;
+  overflow:hidden;
+}
+
+.progress div{
+  width:73%;
+  height:100%;
+  background:#7cff00;
+}
+
+.comp-footer{
+  display:flex;
+  justify-content:space-between;
+  color:#7e8791;
+  font-size:11px;
+}
+
+.join{
+  margin-top:20px;
+  width:100%;
+}
+
+/* LEADERBOARD */
+
+.row{
+  display:grid;
+  grid-template-columns:35px 1fr auto;
+  align-items:center;
+  padding:13px 0;
+  border-bottom:1px solid #20242a;
+}
+
+.row:last-child{
+  border-bottom:0;
+}
+
+.rank{
+  color:#656d76;
+  font-size:12px;
+  font-weight:800;
+}
+
+.person{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.mini-avatar{
+  width:31px;
+  height:31px;
+  border-radius:50%;
+  background:#242a30;
+  display:grid;
+  place-items:center;
+  font-size:11px;
+  font-weight:900;
+}
+
+.person-name{
+  font-size:12px;
+  font-weight:800;
+}
+
+.person-mode{
+  color:#656e78;
+  font-size:9px;
+  margin-top:2px;
+}
+
+.score{
+  font-size:12px;
+  font-weight:900;
+  color:#7cff00;
+}
+
+/* ACTIVITY */
+
+.feed{
+  grid-column:1 / -1;
+}
+
+.feed-item{
+  display:flex;
+  gap:14px;
+  padding:15px 0;
+  border-bottom:1px solid #20242a;
+}
+
+.feed-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#7cff00;
+  margin-top:5px;
+  box-shadow:0 0 12px #7cff00;
+}
+
+.feed-text{
+  font-size:12px;
+  color:#c3c8ce;
+}
+
+.feed-text strong{
+  color:white;
+}
+
+.feed-time{
+  color:#656d76;
+  font-size:10px;
+  margin-top:4px;
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+  .hero{
+    grid-template-columns:1fr;
+    padding-top:45px;
+  }
+
+  .map{
+    height:430px;
+  }
+
+  .content{
+    grid-template-columns:1fr;
+  }
+
+  .feed{
+    grid-column:auto;
+  }
+}
+
+@media(max-width:600px){
+  nav{
+    padding:0 18px;
+  }
+
+  .live-pill{
+    display:none;
+  }
+
+  .hero{
+    padding-left:18px;
+    padding-right:18px;
+  }
+
+  h1{
+    font-size:53px;
+    letter-spacing:-3px;
+  }
+
+  .quick-stats{
+    gap:7px;
+  }
+
+  .stat{
+    padding:13px;
+  }
+
+  .stat-number{
+    font-size:20px;
+  }
+
+  .content{
+    padding-left:18px;
+    padding-right:18px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<nav>
+  <div class="logo">KATIHAR<span>MOVE</span></div>
+
+  <div class="nav-right">
+    <div class="live-pill">●  LIVE IN KATIHAR</div>
+    <div class="avatar">A</div>
+  </div>
+</nav>
+
+
+<section class="hero">
+
+  <div>
+
+    <div class="eyebrow">KATIHAR'S REAL-WORLD MOVEMENT GAME</div>
+
+    <h1>
+      MOVE.<br>
+      <span>COMPETE.</span><br>
+      OWN IT.
+    </h1>
+
+    <p class="hero-copy">
+      Walk. Jog. Run. Challenge people around you,
+      capture checkpoints and climb Katihar's live leaderboard.
+      Your city is the game.
+    </p>
+
+    <div class="hero-buttons">
+      <button class="primary" onclick="startRun()">
+        START MOVING →
+      </button>
+
+      <button class="secondary" onclick="scrollToCompetition()">
+        VIEW LIVE RACES
+      </button>
+    </div>
+
+    <div class="quick-stats">
+
+      <div class="stat">
+        <div class="stat-number" id="players">247</div>
+        <div class="stat-label">Players active</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-number">18</div>
+        <div class="stat-label">Live competitions</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-number" id="distance">1,284</div>
+        <div class="stat-label">KM today</div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="map-wrap">
+
+    <div class="map">
+
+      <div class="map-top">
+        <div class="map-badge">
+          🟢 <span>LIVE MAP</span>
+        </div>
+
+        <div class="map-badge">
+          KATIHAR · ACTIVE
+        </div>
+      </div>
+
+      <div class="road r1"></div>
+      <div class="road r2"></div>
+      <div class="road r3"></div>
+      <div class="road r4"></div>
+      <div class="road r5"></div>
+
+      <div class="map-label l1">KATIHAR JUNCTION</div>
+      <div class="map-label l2">SHAHID CHOWK</div>
+      <div class="map-label l3">MIRCHAIBARI</div>
+      <div class="map-label l4">DURGASTHAN</div>
+
+      <div class="player p1">
+        R
+        <small>Rahul · 5.8 km</small>
+      </div>
+
+      <div class="player p2">
+        S
+        <small>Shivam · 4.2 km</small>
+      </div>
+
+      <div class="player p3">
+        P
+        <small>Priya · 6.1 km</small>
+      </div>
+
+      <div class="player p4">
+        A
+        <small>Aman · 3.7 km</small>
+      </div>
+
+      <div class="player p5">
+        N
+        <small>Nikhil · 2.9 km</small>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<section class="content">
+
+  <div class="card competition" id="competition">
+
+    <div class="comp-top">
+      <div class="live">● LIVE NOW</div>
+      <div class="muted">ENDS IN <strong id="timer">42:18</strong></div>
+    </div>
+
+    <div class="comp-name">THE MORNING TAKEOVER</div>
+
+    <div class="comp-meta">
+      📍 Katihar City · 5 KM Challenge · 86 Players
+    </div>
+
+    <div class="progress">
+      <div></div>
+    </div>
+
+    <div class="comp-footer">
+      <span>73% players active</span>
+      <span>₹0 ENTRY</span>
+    </div>
+
+    <button class="primary join" onclick="joinCompetition()">
+      JOIN COMPETITION
+    </button>
+
+  </div>
+
+
+  <div class="card">
+
+    <div class="card-head">
+      <div class="card-title">LIVE LEADERBOARD</div>
+      <div class="muted">REAL-TIME</div>
+    </div>
+
+    <div class="row">
+      <div class="rank">01</div>
+
+      <div class="person">
+        <div class="mini-avatar">R</div>
+        <div>
+          <div class="person-name">Rahul Singh</div>
+          <div class="person-mode">RUNNER</div>
+        </div>
+      </div>
+
+      <div class="score">842 XP</div>
+    </div>
+
+    <div class="row">
+      <div class="rank">02</div>
+
+      <div class="person">
+        <div class="mini-avatar">S</div>
+        <div>
+          <div class="person-name">Shivam</div>
+          <div class="person-mode">RUNNER</div>
+        </div>
+      </div>
+
+      <div class="score">801 XP</div>
+    </div>
+
+    <div class="row">
+      <div class="rank">03</div>
+
+      <div class="person">
+        <div class="mini-avatar">P</div>
+        <div>
+          <div class="person-name">Priya K.</div>
+          <div class="person-mode">JOGGER</div>
+        </div>
+      </div>
+
+      <div class="score">764 XP</div>
+    </div>
+
+    <div class="row">
+      <div class="rank">04</div>
+
+      <div class="person">
+        <div class="mini-avatar">A</div>
+        <div>
+          <div class="person-name">Aman</div>
+          <div class="person-mode">WALKER</div>
+        </div>
+      </div>
+
+      <div class="score">721 XP</div>
+    </div>
+
+  </div>
+
+
+  <div class="card feed">
+
+    <div class="card-head">
+      <div class="card-title">LIVE ACTIVITY</div>
+      <div class="muted">KATIHAR RIGHT NOW</div>
+    </div>
+
+    <div id="feed">
+
+      <div class="feed-item">
+        <div class="feed-dot"></div>
+        <div>
+          <div class="feed-text">
+            <strong>Rahul</strong> just crossed Checkpoint #3
+          </div>
+          <div class="feed-time">8 seconds ago</div>
+        </div>
+      </div>
+
+      <div class="feed-item">
+        <div class="feed-dot"></div>
+        <div>
+          <div class="feed-text">
+            <strong>Priya</strong> joined The Morning Takeover
+          </div>
+          <div class="feed-time">24 seconds ago</div>
+        </div>
+      </div>
+
+      <div class="feed-item">
+        <div class="feed-dot"></div>
+        <div>
+          <div class="feed-text">
+            <strong>Shivam</strong> moved into 2nd place
+          </div>
+          <div class="feed-time">41 seconds ago</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+</div>
+
+
+<script>
+
+let seconds = 42 * 60 + 18;
+
+setInterval(() => {
+
+  seconds--;
+
+  if(seconds < 0) seconds = 42 * 60 + 18;
+
+  const min = Math.floor(seconds / 60);
+  const sec = seconds % 60;
+
+  document.getElementById("timer").textContent =
+    `${String(min).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
+
+},1000);
+
+
+setInterval(() => {
+
+  const players = document.getElementById("players");
+
+  let current = Number(players.textContent);
+
+  current += Math.random() > .5 ? 1 : -1;
+
+  if(current < 210) current = 210;
+
+  players.textContent = current;
+
+},3500);
+
+
+setInterval(() => {
+
+  const distance = document.getElementById("distance");
+
+  let current = Number(distance.textContent.replace(",",""));
+
+  current += Math.random() > .4 ? 1 : 0;
+
+  distance.textContent = current.toLocaleString();
+
+},5000);
+
+
+function startRun(){
+
+  alert(
+    "🚀 KATIHAR MOVE\n\n" +
+    "Next step: GPS permission + live tracking.\n\n" +
+    "Walk • Jog • Run"
+  );
+
+}
+
+
+function joinCompetition(){
+
+  alert(
+    "🔥 You're joining THE MORNING TAKEOVER!\n\n" +
+    "Real version mein yahan GPS tracking start hogi."
+  );
+
+}
+
+
+function scrollToCompetition(){
+
+  document
+    .getElementById("competition")
+    .scrollIntoView({
+      behavior:"smooth"
+    });
+
+}
+
+</script>
+
+</body>
+</html>
